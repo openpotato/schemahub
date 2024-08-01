@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schemahub.openpotato.org/schema-catalog.json",
+  "version": 1,
+  "schemas": [
+    {
+      "name": "CSV Table Schema Specification v-0.1",
+      "description": "JSON schema for CSV Table Schema (version 0.1)",
+      "targetFolder": "csv-table-schema/v0.1",
+      "urls": [
+        "https://raw.githubusercontent.com/openpotato/csv-table-schema/main/schemas/v0.1/schema.json"
+      ]
+    },
+    {
+      "name": "OpenCoLi Schema v-0.1",
+      "description": "JSON schema for OpenCoLi format (version 0.1)",
+      "targetFolder": "opencoli/v0.1",
+      "urls": [
+        "https://raw.githubusercontent.com/openpotato/opencoli/main/schemas/v0.1/schema.json"
+      ]
+    }
+  ]
+}

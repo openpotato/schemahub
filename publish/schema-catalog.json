@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "id": "https://schemahub.openpotato.org/schema-catalog.json",
+  "title": "Catalog Schema Specification for schemahub.openpotato.org",
+  "description": "JSON schema for the schemahub.openpotato.org catalog file",
+  "type": "object",
+  "properties": {
+    "schemas": {
+      "description": "A list of JSON schema references.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the schema",
+            "type": "string"
+          },
+          "description": {
+            "description": "A description of the schema",
+            "type": "string"
+          },
+          "urls": {
+            "description": "A list of absolute schema location URLs",
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https://"
+            }
+          },
+          "targetFolder": {
+            "description": "A relative target folder into which the schema files for the publication are to be copied.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "urls",
+          "targetFolder"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schemas"
+  ],
+  "additionalProperties": false
+}
