@@ -11,11 +11,11 @@
       ]
     },
     {
-      "name": "OpenCoLi Schema v-0.1",
-      "description": "JSON schema for OpenCoLi format (version 0.1)",
-      "targetFolder": "opencoli/v0.1",
+      "name": "OpenCodeList Schema v-0.1",
+      "description": "JSON schema for OpenCodeList format (version 0.1)",
+      "targetFolder": "opencodelist/v0.1",
       "urls": [
-        "https://raw.githubusercontent.com/openpotato/opencoli/main/schemas/v0.1/schema.json"
+        "https://raw.githubusercontent.com/openpotato/opencodelist/main/schemas/v0.1/schema.json"
       ]
     }
   ]
