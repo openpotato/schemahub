@@ -1,0 +1,1012 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemahub.openpotato.org/opencodelist/v0.1/schema.json",
+  "$comment": "v-0.1.3",
+  "title": "OpenCodeList Document Schema Specification",
+  "description": "The specification of Open Code List Representation Format (OpenCodeList) v0.1.x documents",
+  "type": "object",
+  "properties": {
+    "opencodelist": {
+      "description": "The version of the OpenCodeList Document Schema",
+      "type": "string",
+      "pattern": "^0\\.1\\.\\d+$"
+    },
+    "codeListSet": {
+      "description": "Definition of a code list set, which is a list of referenced code lists.",
+      "$ref": "#/$defs/codeListSet"
+    },
+    "codeList": {
+      "description": "Definition of a single code list.",
+      "$ref": "#/$defs/codeList"
+    }
+  },
+  "required": [
+    "opencodelist"
+  ],
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "codeListSet"
+      ]
+    },
+    {
+      "type": "object",
+      "required": [
+        "codeList"
+      ]
+    }
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "agency": {
+      "description": "Agency that is responsible for publication and/or maintenance of the codes.",
+      "type": "object",
+      "properties": {
+        "shortName": {
+          "description": "Short name for the agency.",
+          "$ref": "#/$defs/text",
+          "examples": [
+            "ISO"
+          ]
+        },
+        "longName": {
+          "description": "Human-readable name for the agency.",
+          "$ref": "#/$defs/text",
+          "examples": [
+            "International Organization for Standardization"
+          ]
+        },
+        "url": {
+          "description": "More information about the agency.",
+          "type": "string",
+          "format": "uri",
+          "examples": [
+            "https://www.iso.org/"
+          ]
+        }
+      },
+      "required": [
+        "shortName"
+      ],
+      "additionalProperties": false
+    },
+    "cell": {
+      "description": "A code list data cell.",
+      "type": "object",
+      "required": [
+        "value"
+      ],
+      "properties": {
+        "columnRef": {
+          "description": "Reference to a column ID in the document. If this field does not exist, the value of the array index of this cell is used to refer to a column definition with the same array index.",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value. It must be valid with respect to the type and restrictions of the matching column.",
+          "oneOf": [
+            {
+              "description": "A null status. Only permitted if the column definition provides for this.",
+              "type": "null"
+            },
+            {
+              "description": "A numeric value. Only permitted if the column definition is `integer` or `number`.",
+              "type": "number"
+            },
+            {
+              "description": "A boolean value. Only permitted if the column definition is `boolean`.",
+              "type": "boolean"
+            },
+            {
+              "description": "An embedded json object. Only permitted if the column definition is `object`.",
+              "type": "object"
+            },
+            {
+              "description": "A string value. Only permitted if the column definition is NOT `boolean`, `integer`, `number` or `object`.",
+              "type": "string"
+            },
+            {
+              "description": "A list of localized string values. Only permitted if the column definition is NOT `boolean`, `integer`, `number` or `object`.",
+              "$ref": "#/$defs/localizableString"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "codeList": {
+      "description": "A single code list.",
+      "type": "object",
+      "properties": {
+        "info": {
+          "description": "Meta information about the code list.",
+          "$ref": "#/$defs/codeListInfo"
+        },
+        "columnSet": {
+          "description": "The column set of the code list.",
+          "$ref": "#/$defs/columnSet"
+        },
+        "dataSet": {
+          "description": "The data of the code list.",
+          "$ref": "#/$defs/dataSet"
+        }
+      },
+      "required": [
+        "info",
+        "columnSet"
+      ],
+      "additionalProperties": false
+    },
+    "codeListInfo": {
+      "description": "Meta information about a code list.",
+      "type": "object",
+      "required": [
+        "shortName",
+        "canonicalVersionUri"
+      ],
+      "properties": {
+        "shortName": {
+          "description": "An short identifier of this code list.",
+          "$ref": "#/$defs/text"
+        },
+        "longName": {
+          "description": "Human-readable name of this code list.",
+          "$ref": "#/$defs/text"
+        },
+        "description": {
+          "description": "A human-readable description for this code list.",
+          "$ref": "#/$defs/text"
+        },
+        "notes": {
+          "description": "Additional human-readable notes for this code list.",
+          "$ref": "#/$defs/text"
+        },
+        "changeLog": {
+          "description": "A curated list of notable changes for the current version of this code list.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "description": "An entry to the change log.",
+            "type": "string"
+          }
+        },
+        "agency": {
+          "description": "Information about the agency that is responsible for publication and/or maintenance of the codes.",
+          "$ref": "#/$defs/agency"
+        },
+        "version": {
+          "description": "The version of the code list",
+          "type": "string",
+          "examples": [
+            "2024-05"
+          ]
+        },
+        "validFrom": {
+          "description": "The timepoint from which this code list is valid.",
+          "type": "string",
+          "format": "date-time",
+          "examples": [
+            "2024-09-01T10:00:00",
+            "2024-09-01T10:00:00+02:00"
+          ]
+        },
+        "validTo": {
+          "description": "The timepoint until which this code list is valid.",
+          "type": "string",
+          "format": "date-time",
+          "examples": [
+            "2024-09-01T10:00:00",
+            "2024-09-01T10:00:00+02:00"
+          ]
+        },
+        "canonicalUri": {
+          "description": "Canonical URI which uniquely identifies all versions (collectively).",
+          "type": "string",
+          "format": "uri",
+          "examples": [
+            "urn:iso:std:iso:4217"
+          ]
+        },
+        "canonicalVersionUri": {
+          "description": "Canonical URI which uniquely identifies this version.",
+          "type": "string",
+          "format": "uri",
+          "examples": [
+            "urn:iso:std:iso:4217:2024-05"
+          ]
+        },
+        "locationUri": {
+          "description": "Suggested retrieval location for this version, in OpenCodeList format.",
+          "$ref": "#/$defs/oneOrMultipleUris"
+        },
+        "publishedAt": {
+          "description": "The timepoint of the publication of this code list.",
+          "type": "string",
+          "format": "date-time",
+          "examples": [
+            "2024-09-01T10:00:00",
+            "2024-09-01T10:00:00+02:00"
+          ]
+        },
+        "publishedFrom": {
+          "description": "The person or organization responsible for the publication of this code list file.",
+          "$ref": "#/$defs/publisher"
+        },
+        "language": {
+          "description": "A language tag according to https://www.rfc-editor.org/rfc/bcp/bcp47.txt to specify the language of the content. Can be overriden by the language tag of a column and/or localized strings.",
+          "type": "string",
+          "examples": [
+            "de",
+            "en"
+          ]
+        }
+      },
+      "patternProperties": {
+        "^x-": {
+          "$ref": "#/$defs/customExtension"
+        }
+      },
+      "additionalProperties": false
+    },
+    "codeListRef": {
+      "description": "An external code list reference.",
+      "type": "object",
+      "properties": {
+        "canonicalUri": {
+          "description": "Canonical URI which uniquely identifies all versions (collectively)",
+          "type": "string",
+          "format": "uri"
+        },
+        "canonicalVersionUri": {
+          "description": "Canonical URI which uniquely identifies this version.",
+          "type": "string",
+          "format": "uri"
+        },
+        "locationUri": {
+          "description": "Suggested retrieval location for this version, in OpenCodeList format.",
+          "$ref": "#/$defs/oneOrMultipleUris"
+        }
+      },
+      "required": [
+        "canonicalVersionUri"
+      ],
+      "additionalProperties": false
+    },
+    "codeListSet": {
+      "description": "A set of referenced code lists.",
+      "type": "object",
+      "required": [
+        "info",
+        "codeListRefSet"
+      ],
+      "properties": {
+        "info": {
+          "description": "Meta information about the code list.",
+          "$ref": "#/$defs/codeListSetInfo"
+        },
+        "codeLists": {
+          "description": "A code list reference.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/codeListRef"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "codeListSetInfo": {
+      "description": "Meta information about a code list set.",
+      "type": "object",
+      "required": [
+        "shortName"
+      ],
+      "properties": {
+        "shortName": {
+          "description": "An short identifier of this code list set.",
+          "$ref": "#/$defs/text"
+        },
+        "longName": {
+          "description": "Human-readable name of this code list set.",
+          "$ref": "#/$defs/text"
+        },
+        "description": {
+          "description": "A human-readable description for this code list set.",
+          "$ref": "#/$defs/text"
+        },
+        "notes": {
+          "description": "Additional human-readable notes for this code list set.",
+          "$ref": "#/$defs/text"
+        },
+        "language": {
+          "description": "A language tag according to https://www.rfc-editor.org/rfc/bcp/bcp47.txt to specify the language of the content. Can be overriden by the language tag of localized strings.",
+          "type": "string",
+          "examples": [
+            "de",
+            "en"
+          ]
+        }
+      },
+      "patternProperties": {
+        "^x-": {
+          "$ref": "#/$defs/customExtension"
+        }
+      },
+      "additionalProperties": false
+    },
+    "column": {
+      "description": "A code list column.",
+      "type": "object",
+      "oneOf": [
+        {
+          "description": "This is a string type column.",
+          "required": [
+            "id",
+            "name",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "$ref": "#/$defs/text"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "string"
+            },
+            "minLength": {
+              "description": "An integer that specifies the minimum character length of the value.",
+              "type": "integer"
+            },
+            "maxLength": {
+              "description": "An integer that specifies the maximum character length of the value.",
+              "type": "integer"
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": false
+            },
+            "pattern": {
+              "description": "A string that specifies a regular expression that must mach against each value.",
+              "type": "string",
+              "format": "regex"
+            },
+            "language": {
+              "description": "A language tag according to https://www.rfc-editor.org/rfc/bcp/bcp47.txt to specify the language of the content. Can be overriden by localized strings.",
+              "type": "string",
+              "examples": [
+                "de",
+                "en"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "This is an enumeration type column.",
+          "required": [
+            "id",
+            "name",
+            "type",
+            "members"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "$ref": "#/$defs/text"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "enum"
+            },
+            "members": {
+              "description": "The list of allowed values for this enumeration.",
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/enumMember"
+              }
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "This is an enumeration set type column. The set of values is formatted as csv string.",
+          "required": [
+            "id",
+            "name",
+            "type",
+            "members"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "$ref": "#/$defs/text"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "enum-set"
+            },
+            "delimiterChar": {
+              "description": "Delimiter character.",
+              "type": "string",
+              "default": ",",
+              "minLength": 1,
+              "maxLength": 1
+            },
+            "quoteChar": {
+              "description": "Quote character.",
+              "type": "string",
+              "default": "\"",
+              "minLength": 1,
+              "maxLength": 1
+            },
+            "members": {
+              "description": "The list of allowed values for the enumeration set.",
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/enumMember"
+              }
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "This is a integer type column. The format must match the native JSON numeric type with the JSON Schema format `integer`. See: https://json-schema.org/understanding-json-schema/reference/numeric.",
+          "required": [
+            "id",
+            "name",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "$ref": "#/$defs/text"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "integer"
+            },
+            "minValue": {
+              "description": "An string that specifies the minimum allowed value.",
+              "type": "integer"
+            },
+            "maxValue": {
+              "description": "An string that specifies the maximum allowed value.",
+              "type": "integer"
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "This is a float type column. The format must match the native JSON numeric type with the JSON Schema format `number`. See: https://json-schema.org/understanding-json-schema/reference/numeric.",
+          "required": [
+            "id",
+            "name",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "$ref": "#/$defs/text"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "number"
+            },
+            "minValue": {
+              "description": "An string that specifies the minimum allowed value.",
+              "type": "number"
+            },
+            "maxValue": {
+              "description": "An string that specifies the maximum allowed value.",
+              "type": "number"
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "This is a boolean type column. The format must match the native JSON boolean format. See: https://json-schema.org/understanding-json-schema/reference/boolean.",
+          "required": [
+            "id",
+            "name",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "$ref": "#/$defs/text"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "boolean"
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "This is a date only type column. The format must match the native JSON string with the JSON Schema format `date`. See: https://json-schema.org/understanding-json-schema/reference/string.",
+          "required": [
+            "id",
+            "name",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "$ref": "#/$defs/text"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "date"
+            },
+            "minValue": {
+              "description": "An string that specifies the minimum allowed value.",
+              "type": "string"
+            },
+            "maxValue": {
+              "description": "An string that specifies the maximum allowed value.",
+              "type": "string"
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": false
+            },
+            "pattern": {
+              "description": "A string that specifies a regular expression that must mach against each value.",
+              "type": "string",
+              "format": "regex"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "This is a time only type column. The format must match the native JSON string with the JSON Schema format `time`. See: https://json-schema.org/understanding-json-schema/reference/string.",
+          "required": [
+            "id",
+            "name",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "$ref": "#/$defs/text"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "time"
+            },
+            "minValue": {
+              "description": "An string that specifies the minimum allowed value.",
+              "type": "string"
+            },
+            "maxValue": {
+              "description": "An string that specifies the maximum allowed value.",
+              "type": "string"
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": false
+            },
+            "pattern": {
+              "description": "A string that specifies a regular expression that must mach against each value.",
+              "type": "string",
+              "format": "regex"
+            }
+          }
+        },
+        {
+          "description": "This is a date-time type column. The format must match the native JSON string with the JSON Schema format `date-time`. See: https://json-schema.org/understanding-json-schema/reference/string.",
+          "required": [
+            "id",
+            "name",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "$ref": "#/$defs/text"
+            },
+            "type": {
+              "description": "The data type of the CSV column.",
+              "const": "date-time"
+            },
+            "minValue": {
+              "description": "An string that specifies the minimum allowed value.",
+              "type": "string"
+            },
+            "maxValue": {
+              "description": "An string that specifies the maximum allowed value.",
+              "type": "string"
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": false
+            },
+            "pattern": {
+              "description": "A string that specifies a regular expression that must mach against each value.",
+              "type": "string",
+              "format": "regex"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "This is an embedded json object type column.",
+          "required": [
+            "id",
+            "name",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "$ref": "#/$defs/text"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "object"
+            },
+            "schemaUri": {
+              "description": "Uri to the JSON schema file.",
+              "type": "string",
+              "format": "uri"
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "columnSet": {
+      "description": "Definition of a column set (columns, unqiue keys and references) for a code list.",
+      "type": "object",
+      "required": [
+        "columns"
+      ],
+      "properties": {
+        "columns": {
+          "description": "The column definitions of the code list.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/column"
+          }
+        },
+        "keys": {
+          "description": "The key definitions of the code list.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/key"
+          }
+        },
+        "defaultKey": {
+          "description": "The default key of the code list.",
+          "type": "object",
+          "required": [
+            "keyRef"
+          ],
+          "properties": {
+            "keyRef": {
+              "description": "Reference to a key ID in the current code list.",
+              "type": "string"
+            }
+          }
+        },
+        "references": {
+          "description": "The reference definitions of the code list.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/reference"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "dataSet": {
+      "description": "The data of a code list.",
+      "type": "object",
+      "required": [
+        "rows"
+      ],
+      "properties": {
+        "rows": {
+          "description": "The list of data rows of the code list.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/row"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "enumMember": {
+      "description": "An enumeration member.",
+      "type": "object",
+      "required": [
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "description": "The value.",
+          "type": "string"
+        },
+        "description": {
+          "description": "A short description of the value.",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "key": {
+      "description": "A key definition.",
+      "required": [
+        "id",
+        "columnRefs"
+      ],
+      "properties": {
+        "id": {
+          "description": "The ID of the key.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the key.",
+          "type": "string"
+        },
+        "description": {
+          "description": "A human-readable description of the key.",
+          "$ref": "#/$defs/text"
+        },
+        "columnRefs": {
+          "description": "A list of column IDs in the current code list.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "description": "Reference to a column ID in the current code list.",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "localizableString": {
+      "description": "A list of localized strings.",
+      "type": "array",
+      "unqiueItems": true,
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "language": {
+            "description": "A language tag according to https://www.rfc-editor.org/rfc/bcp/bcp47.txt to specify the language of the content.",
+            "type": "string",
+            "examples": [
+              "de",
+              "en"
+            ]
+          },
+          "text": {
+            "description": "The text string.",
+            "type": "string"
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "oneOrMultipleUris": {
+      "oneOf": [
+        {
+          "description": "An single uri.",
+          "type": "string",
+          "format": "uri"
+        },
+        {
+          "description": "An array of uris.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      ]
+    },
+    "publisher": {
+      "description": "Publisher that created this code list file.",
+      "type": "object",
+      "properties": {
+        "shortName": {
+          "description": "Short name for the publisher.",
+          "$ref": "#/$defs/text",
+          "examples": [
+            "OpenCodeList"
+          ]
+        },
+        "longName": {
+          "description": "Human-readable name for the publisher.",
+          "$ref": "#/$defs/text",
+          "examples": [
+            "The OpenCodeList Project"
+          ]
+        },
+        "url": {
+          "description": "More information about the publisher.",
+          "type": "string",
+          "format": "uri",
+          "examples": [
+            "https://www.openpotato.org/"
+          ]
+        }
+      },
+      "required": [
+        "shortName"
+      ],
+      "additionalProperties": false
+    },
+    "reference": {
+      "description": "A reference definition.",
+      "type": "object",
+      "required": [
+        "keyRef"
+      ],
+      "properties": {
+        "codeListRef": {
+          "description": "Reference to an external code list.",
+          "$ref": "#/$defs/codeListRef"
+        },
+        "keyRef": {
+          "description": "Reference to a key ID in an external code list or, if `codeListRef` is set, to an external code list.",
+          "type": "string"
+        },
+        "additionalProperties": false
+      }
+    },
+    "row": {
+      "description": "A code list row.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/cell"
+      }
+    },
+    "text": {
+      "oneOf": [
+        {
+          "description": "A simple text string.",
+          "type": "string"
+        },
+        {
+          "description": "A list of localized strings.",
+          "$ref": "#/$defs/localizableString"
+        }
+      ]
+    },
+    "customExtension": {
+      "description": "Any property starting with x- is valid.",
+      "additionalProperties": true,
+      "additionalItems": true
+    }
+  }
+}
