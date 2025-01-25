@@ -1,0 +1,1255 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemahub.openpotato.org/opencodelist/v0.2/schema.json",
+  "$comment": "v-0.2.0",
+  "title": "OpenCodeList Document Schema Specification",
+  "description": "The specification of Open Code List Representation Format (OpenCodeList) v0.2.x documents",
+  "type": "object",
+  "properties": {
+    "$opencodelist": {
+      "description": "The version of the OpenCodeList Document Schema",
+      "type": "string",
+      "pattern": "^0\\.2\\.\\d+$"
+    },
+    "$comments": {
+      "description": "A place for comments.",
+      "$ref": "#/$defs/comments"
+    },
+    "codeList": {
+      "description": "The content of a code list document.",
+      "$ref": "#/$defs/codeList"
+    },
+    "codeListSet": {
+      "description": "The content of a code list set document.",
+      "$ref": "#/$defs/codeListSet"
+    }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "$opencodelist",
+        "codeList"
+      ]
+    },
+    {
+      "required": [
+        "$opencodelist",
+        "codeListSet"
+      ]
+    }
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "publisher": {
+      "description": "Publisher that is responsible for publication and/or maintenance of the document.",
+      "type": "object",
+      "required": [
+        "shortName"
+      ],
+      "properties": {
+        "shortName": {
+          "description": "Short name for the publisher.",
+          "type": "string",
+          "examples": [
+            "ISO"
+          ]
+        },
+        "longName": {
+          "description": "Human-readable name for the publisher.",
+          "type": "string",
+          "examples": [
+            "International Organization for Standardization"
+          ]
+        },
+        "identifier": {
+          "description": "Identifier for the publisher.",
+          "$ref": "#/$defs/identifier"
+        },
+        "url": {
+          "description": "More external information about the publisher.",
+          "type": "string",
+          "format": "uri",
+          "examples": [
+            "https://www.iso.org/"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "annotation": {
+      "description": "Custom user annotation information.",
+      "type": "object",
+      "required": [
+        "descriptions"
+      ],
+      "properties": {
+        "descriptions": {
+          "description": "Human-readable descriptions.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "format",
+              "content"
+            ],
+            "properties": {
+              "language": {
+                "description": "A language tag according to https://www.rfc-editor.org/rfc/bcp/bcp47.txt to specify the language of the description.",
+                "type": "string"
+              },
+              "format": {
+                "description": "Format of the description.",
+                "type": "string",
+                "enum": [
+                  "text",
+                  "markdown",
+                  "html",
+                  "xml"
+                ]
+              },
+              "content": {
+                "description": "The description.",
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "appInfo": {
+          "description": "Machine-readable information.",
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "codeList": {
+      "description": "The content of a code list document.",
+      "type": "object",
+      "required": [
+        "identification",
+        "columnSet"
+      ],
+      "properties": {
+        "annotation": {
+          "description": "User annotation information.",
+          "$ref": "#/$defs/annotation"
+        },
+        "identification": {
+          "description": "Meta information about the code list.",
+          "$ref": "#/$defs/identification"
+        },
+        "columnSet": {
+          "description": "The column set of the code list.",
+          "$ref": "#/$defs/columnSet"
+        },
+        "dataSet": {
+          "description": "The data of the code list.",
+          "$ref": "#/$defs/dataSet"
+        }
+      },
+      "additionalProperties": false
+    },
+    "codeListSet": {
+      "description": "The content of code list set document.",
+      "type": "object",
+      "required": [
+        "identification",
+        "referenceSet"
+      ],
+      "properties": {
+        "annotation": {
+          "description": "User annotation information.",
+          "$ref": "#/$defs/annotation"
+        },
+        "identification": {
+          "description": "Meta information about the code list set.",
+          "$ref": "#/$defs/identification"
+        },
+        "referenceSet": {
+          "description": "A list of references to external code lists and/or code list sets.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/documentRef"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "column": {
+      "description": "A code list column.",
+      "type": "object",
+      "oneOf": [
+        {
+          "description": "This is a string type column.",
+          "required": [
+            "id",
+            "name",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "string"
+            },
+            "minLength": {
+              "description": "An integer that specifies the minimum character length of the value.",
+              "type": "integer"
+            },
+            "maxLength": {
+              "description": "An integer that specifies the maximum character length of the value.",
+              "type": "integer"
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": true
+            },
+            "optional": {
+              "description": "A boolean that specifies whether the value is optional.",
+              "type": "boolean",
+              "default": false
+            },
+            "pattern": {
+              "description": "A string that specifies a regular expression that must mach against each value.",
+              "type": "string",
+              "format": "regex"
+            },
+            "language": {
+              "description": "A language tag according to https://www.rfc-editor.org/rfc/bcp/bcp47.txt to specify the language of the content.",
+              "type": "string",
+              "examples": [
+                "de",
+                "en"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "This is an enumeration type column.",
+          "required": [
+            "id",
+            "name",
+            "type",
+            "members"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "enum"
+            },
+            "members": {
+              "description": "The list of allowed values for this enumeration.",
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/enumMember"
+              }
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": true
+            },
+            "optional": {
+              "description": "A boolean that specifies whether the value is optional.",
+              "type": "boolean",
+              "default": false
+            },
+            "language": {
+              "description": "A language tag according to https://www.rfc-editor.org/rfc/bcp/bcp47.txt to specify the language of the content.",
+              "type": "string",
+              "examples": [
+                "de",
+                "en"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "This is an enumeration set type column. The set of values is formatted as csv string.",
+          "required": [
+            "id",
+            "name",
+            "type",
+            "members"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "enum-set"
+            },
+            "members": {
+              "description": "The list of allowed values for the enumeration set.",
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/enumMember"
+              }
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": true
+            },
+            "optional": {
+              "description": "A boolean that specifies whether the value is optional.",
+              "type": "boolean",
+              "default": false
+            },
+            "language": {
+              "description": "A language tag according to https://www.rfc-editor.org/rfc/bcp/bcp47.txt to specify the language of the content.",
+              "type": "string",
+              "examples": [
+                "de",
+                "en"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "This is a integer type column. The format must match the native JSON numeric type with the JSON Schema format `integer`. See: https://json-schema.org/understanding-json-schema/reference/numeric.",
+          "required": [
+            "id",
+            "name",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "integer"
+            },
+            "minValue": {
+              "description": "An integer value that specifies the minimum allowed value.",
+              "type": "integer"
+            },
+            "maxValue": {
+              "description": "An integer value that specifies the maximum allowed value.",
+              "type": "integer"
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": true
+            },
+            "optional": {
+              "description": "A boolean that specifies whether the value is optional.",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "This is a float type column. The format must match the native JSON numeric type with the JSON Schema format `number`. See: https://json-schema.org/understanding-json-schema/reference/numeric.",
+          "required": [
+            "id",
+            "name",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "number"
+            },
+            "minValue": {
+              "description": "A number value that specifies the minimum allowed value.",
+              "type": "number"
+            },
+            "exclusiveMinValue": {
+              "description": "A number value that specifies the representing an exclusive lower limit for a value.",
+              "type": "number"
+            },
+            "maxValue": {
+              "description": "A number value that specifies the maximum allowed value.",
+              "type": "number"
+            },
+            "exclusiveMaxValue": {
+              "description": "A number value that specifies the representing an exclusive upper limit for a value.",
+              "type": "number"
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": true
+            },
+            "optional": {
+              "description": "A boolean that specifies whether the value is optional.",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "This is a boolean type column. The format must match the native JSON boolean format. See: https://json-schema.org/understanding-json-schema/reference/boolean.",
+          "required": [
+            "id",
+            "name",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "boolean"
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": true
+            },
+            "optional": {
+              "description": "A boolean that specifies whether the value is optional.",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "This is a date only type column. The format must match the native JSON string with the JSON Schema format `date`. See: https://json-schema.org/understanding-json-schema/reference/string.",
+          "required": [
+            "id",
+            "name",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "date"
+            },
+            "minValue": {
+              "description": "A value that specifies the minimum allowed value.",
+              "type": "string",
+              "format": "date"
+            },
+            "maxValue": {
+              "description": "A value that specifies the maximum allowed value.",
+              "type": "string",
+              "format": "date"
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": true
+            },
+            "optional": {
+              "description": "A boolean that specifies whether the value is optional.",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "This is a time only type column. The format must match the native JSON string with the JSON Schema format `time`. See: https://json-schema.org/understanding-json-schema/reference/string.",
+          "required": [
+            "id",
+            "name",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "time"
+            },
+            "minValue": {
+              "description": "A value that specifies the minimum allowed value.",
+              "type": "string",
+              "format": "time"
+            },
+            "maxValue": {
+              "description": "A value that specifies the maximum allowed value.",
+              "type": "string",
+              "format": "time"
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": true
+            },
+            "optional": {
+              "description": "A boolean that specifies whether the value is optional.",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "This is a date-time type column. The format must match the native JSON string with the JSON Schema format `date-time`. See: https://json-schema.org/understanding-json-schema/reference/string.",
+          "required": [
+            "id",
+            "name",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The data type of the CSV column.",
+              "const": "date-time"
+            },
+            "minValue": {
+              "description": "A value that specifies the minimum allowed value.",
+              "type": "string",
+              "format": "date-time"
+            },
+            "maxValue": {
+              "description": "A value that specifies the maximum allowed value.",
+              "type": "string",
+              "format": "date-time"
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": true
+            },
+            "optional": {
+              "description": "A boolean that specifies whether the value is optional.",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "This is an embedded json document type column.",
+          "required": [
+            "id",
+            "name",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "description": "The ID of the code list column.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the code list column.",
+              "type": "string"
+            },
+            "description": {
+              "description": "A human-readable description of the code list column.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The type keyword of the code list column.",
+              "const": "document"
+            },
+            "schema": {
+              "oneOf": [
+                {
+                  "description": "Embedded JSON schema.",
+                  "type": "object"
+                },
+                {
+                  "description": "Uri to the JSON schema file.",
+                  "type": "string",
+                  "format": "uri"
+                }
+              ]
+            },
+            "nullable": {
+              "description": "A boolean that specifies whether the value can be `null`.",
+              "type": "boolean",
+              "default": true
+            },
+            "optional": {
+              "description": "A boolean that specifies whether the value is optional.",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "columnSet": {
+      "description": "Definition of a column set (columns, unqiue keys, default key and foreign keys) for a code list.",
+      "type": "object",
+      "required": [
+        "columns",
+        "keys"
+      ],
+      "properties": {
+        "columns": {
+          "description": "The column definitions of the code list.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/column"
+          }
+        },
+        "keys": {
+          "description": "The key definitions of the code list.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/key"
+          }
+        },
+        "defaultKey": {
+          "description": "Specifies the default key if several keys are defined.",
+          "type": "object",
+          "required": [
+            "keyId"
+          ],
+          "properties": {
+            "keyId": {
+              "description": "A key ID in this code list.",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "foreignKeys": {
+          "description": "The foreign key definitions of the code list.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/foreignKey"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "comments": {
+      "description": "Comments to a document.",
+      "type": "array",
+      "unqiueItems": true,
+      "minItems": 1,
+      "items": {
+        "description": "A comment.",
+        "type": "string"
+      }
+    },
+    "dataSet": {
+      "description": "The actual data of a code list.",
+      "type": "object",
+      "required": [
+        "rows"
+      ],
+      "properties": {
+        "rows": {
+          "description": "A list of data rows.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/row"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "documentRef": {
+      "description": "A reference to an external code list or code list set.",
+      "type": "object",
+      "oneOf": [
+        {
+          "description": "A reference to an external code list.",
+          "type": "object",
+          "required": [
+            "type",
+            "canonicalVersionUri"
+          ],
+          "properties": {
+            "type": {
+              "description": "The type keyword of the code list reference.",
+              "const": "codeListRef"
+            },
+            "annotation": {
+              "description": "User annotation information.",
+              "$ref": "#/$defs/annotation "
+            },
+            "canonicalUri": {
+              "description": "Canonical URI which uniquely identifies all versions (collectively).",
+              "type": "string",
+              "format": "uri"
+            },
+            "canonicalVersionUri": {
+              "description": "Canonical URI which uniquely identifies this version.",
+              "type": "string",
+              "format": "uri"
+            },
+            "locationUrls": {
+              "description": "Suggested retrieval locations for the external code list, in OpenCodeList format.",
+              "type": "array",
+              "unqiueItems": true,
+              "minItems": 1,
+              "items": {
+                "description": "The uri of the document.",
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "A reference to an external code list set.",
+          "type": "object",
+          "required": [
+            "type",
+            "canonicalVersionUri"
+          ],
+          "properties": {
+            "type": {
+              "description": "The type keyword of the code list set reference.",
+              "const": "codeListSetRef"
+            },
+            "annotation": {
+              "description": "User annotation information.",
+              "$ref": "#/$defs/annotation "
+            },
+            "canonicalUri": {
+              "description": "Canonical URI which uniquely identifies all versions (collectively).",
+              "type": "string",
+              "format": "uri"
+            },
+            "canonicalVersionUri": {
+              "description": "Canonical URI which uniquely identifies this version.",
+              "type": "string",
+              "format": "uri"
+            },
+            "locationUrls": {
+              "description": "Suggested retrieval locations for the external code list set version, in OpenCodeList format.",
+              "type": "array",
+              "unqiueItems": true,
+              "minItems": 1,
+              "items": {
+                "description": "The uri of the document.",
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "enumMember": {
+      "description": "An enumeration member.",
+      "type": "object",
+      "required": [
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "description": "The value.",
+          "type": [
+            "string",
+            "number",
+            "boolean"
+          ]
+        },
+        "description": {
+          "description": "A short description of the value.",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "foreignKey": {
+      "description": "A foreign key definition. A foreign key defines a reference between the current code list and an external code list.",
+      "type": "object",
+      "required": [
+        "id",
+        "columnIds",
+        "keyRef"
+      ],
+      "properties": {
+        "id": {
+          "description": "The ID of the foreign key.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the foreign key.",
+          "type": "string"
+        },
+        "description": {
+          "description": "A short description of the foreign key.",
+          "type": "string"
+        },
+        "columnIds": {
+          "description": "A list of column IDs in the current code list.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "description": "Reference to a column ID in this code list.",
+            "type": "string"
+          }
+        },
+        "keyRef": {
+          "description": "Reference to a key in an external code list. The number of columns in the external key and their data types must match the number of columns in `columnIds` and their data types.",
+          "type": "object",
+          "required": [
+            "codeListRef",
+            "keyId"
+          ],
+          "properties": {
+            "codeListRef": {
+              "description": "A reference to an external code list.",
+              "type": "object",
+              "required": [
+                "canonicalVersionUri"
+              ],
+              "properties": {
+                "canonicalUri": {
+                  "description": "Canonical URI which uniquely identifies all versions (collectively).",
+                  "type": "string",
+                  "format": "uri"
+                },
+                "canonicalVersionUri": {
+                  "description": "Canonical URI which uniquely identifies this version.",
+                  "type": "string",
+                  "format": "uri"
+                },
+                "locationUrls": {
+                  "description": "Suggested retrieval locations for the external code list version, in OpenCodeList format.",
+                  "type": "array",
+                  "unqiueItems": true,
+                  "minItems": 1,
+                  "items": {
+                    "description": "The uri of the document.",
+                    "type": "string",
+                    "format": "uri"
+                  }
+                }
+              },
+              "additionalProperties": false
+            },
+            "keyId": {
+              "description": "A key ID in the external code list",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "identification": {
+      "description": "General document information like identification, location, version and change-log.",
+      "type": "object",
+      "required": [
+        "shortName",
+        "canonicalVersionUri"
+      ],
+      "properties": {
+        "language": {
+          "description": "A language tag according to https://www.rfc-editor.org/rfc/bcp/bcp47.txt to specify the language of the content. Can be overriden by the language tag of a column.",
+          "type": "string",
+          "examples": [
+            "de",
+            "en"
+          ]
+        },
+        "shortName": {
+          "description": "An short identifier of the document.",
+          "type": "string"
+        },
+        "longName": {
+          "description": "A human-readable name of the document.",
+          "type": "string"
+        },
+        "description": {
+          "description": "A human-readable description for the document.",
+          "type": "string"
+        },
+        "tags": {
+          "description": "A list of tags or keywords that define what the document is about.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "description": "A tag.",
+            "type": "string"
+          }
+        },
+        "version": {
+          "description": "The version of the document",
+          "type": "string",
+          "examples": [
+            "2024-05"
+          ]
+        },
+        "changeLog": {
+          "description": "A curated list of notable changes for the current version of the document.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "description": "An entry to the change log.",
+            "type": "string"
+          }
+        },
+        "publisher": {
+          "description": "Information about the publisher that is responsible for publication and/or maintenance of the document.",
+          "$ref": "#/$defs/publisher"
+        },
+        "publishedAt": {
+          "description": "The timepoint of the publication of the document.",
+          "type": "string",
+          "format": "date-time",
+          "examples": [
+            "2024-09-01T10:00:00",
+            "2024-09-01T10:00:00+02:00"
+          ]
+        },
+        "validFrom": {
+          "description": "The timepoint from which this document is valid.",
+          "type": "string",
+          "format": "date-time",
+          "examples": [
+            "2024-09-01T10:00:00",
+            "2024-09-01T10:00:00+02:00"
+          ]
+        },
+        "validTo": {
+          "description": "The timepoint until which this document is valid.",
+          "type": "string",
+          "format": "date-time",
+          "examples": [
+            "2024-09-01T10:00:00",
+            "2024-09-01T10:00:00+02:00"
+          ]
+        },
+        "canonicalUri": {
+          "description": "Canonical URI which uniquely identifies all versions (collectively).",
+          "type": "string",
+          "format": "uri",
+          "examples": [
+            "urn:iso:std:iso:4217"
+          ]
+        },
+        "canonicalVersionUri": {
+          "description": "Canonical URI which uniquely identifies this version.",
+          "type": "string",
+          "format": "uri",
+          "examples": [
+            "urn:iso:std:iso:4217:2024-05"
+          ]
+        },
+        "locationUrls": {
+          "description": "Suggested retrieval locations for this document, in OpenCodeList format.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "description": "The url of the resource.",
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "alternateLanguageLocations": {
+          "description": "Suggested retrieval locations for this document, in OpenCodeList format, but in a different language.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/localizedUri"
+          }
+        },
+        "alternateFormatLocations": {
+          "description": "Suggested retrieval locations for this document, in a format other than OpenCodeList.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/mimeTypedUri"
+          }
+        }
+      },
+      "patternProperties": {
+        "^x-": {
+          "$ref": "#/$defs/customExtension"
+        }
+      },
+      "additionalProperties": false
+    },
+    "identifier": {
+      "description": "A general identifier.",
+      "type": "object",
+      "required": [
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "description": "The identifier value.",
+          "type": "string",
+          "examples": [
+            "5"
+          ]
+        },
+        "source": {
+          "description": "The source of the identifier.",
+          "$ref": "#/$defs/identifierSource"
+        },
+        "additionalProperties": false
+      }
+    },
+    "identifierSource": {
+      "description": "Source information for a general identifier.",
+      "type": "object",
+      "required": [
+        "shortName"
+      ],
+      "properties": {
+        "shortName": {
+          "description": "Short name of the source.",
+          "type": "string",
+          "examples": [
+            "UNECE"
+          ]
+        },
+        "longName": {
+          "description": "Long name of the source.",
+          "type": "string",
+          "examples": [
+            "United Nations Economic Commission for Europe."
+          ]
+        },
+        "url": {
+          "description": "More information about the source.",
+          "type": "string",
+          "format": "uri",
+          "examples": [
+            "https://service.unece.org/trade/untdid/i96b/uncl/uncl3055.htm"
+          ]
+        },
+        "additionalProperties": false
+      }
+    },
+    "key": {
+      "description": "A key definition. A key defines a column or a combination of columns whose values or combination of values are unique.",
+      "type": "object",
+      "required": [
+        "id",
+        "columnIds"
+      ],
+      "properties": {
+        "id": {
+          "description": "The ID of the key.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the key.",
+          "type": "string"
+        },
+        "description": {
+          "description": "A human-readable description of the key.",
+          "type": "string"
+        },
+        "columnIds": {
+          "description": "A list of column IDs in the current code list.",
+          "type": "array",
+          "unqiueItems": true,
+          "minItems": 1,
+          "items": {
+            "description": "A column ID in the current code list.",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "localizedUri": {
+      "description": "An url to a localized resource.",
+      "type": "object",
+      "required": [
+        "language",
+        "url"
+      ],
+      "properties": {
+        "language": {
+          "description": "A language tag according to https://www.rfc-editor.org/rfc/bcp/bcp47.txt to specify the language of the resource.",
+          "type": "string"
+        },
+        "url": {
+          "description": "The url of the resource.",
+          "type": "string",
+          "format": "uri"
+        },
+        "additionalProperties": false
+      }
+    },
+    "mimeTypedUri": {
+      "description": "A mime typed url.",
+      "type": "object",
+      "required": [
+        "mimeType",
+        "url"
+      ],
+      "properties": {
+        "mimeType": {
+          "description": "MIME type of the resource which can be retrieved from the url.",
+          "type": "string"
+        },
+        "url": {
+          "description": "The url of the resource.",
+          "type": "string",
+          "format": "uri"
+        },
+        "additionalProperties": false
+      }
+    },
+    "row": {
+      "description": "A code list row. This object MUST have as many properties as there are defined columns. The property name of each property MUST match the ID of a defined column.",
+      "type": "object",
+      "patternProperties": {
+        ".*": {
+          "description": "The value. It must be valid with respect to the type and restrictions of the matching column.",
+          "oneOf": [
+            {
+              "description": "A null status. Only permitted if the column definition provides for this.",
+              "type": "null"
+            },
+            {
+              "description": "A numeric value. Only permitted if the column definition is `integer` or `number`.",
+              "type": "number"
+            },
+            {
+              "description": "A boolean value. Only permitted if the column definition is `boolean`.",
+              "type": "boolean"
+            },
+            {
+              "description": "An embedded json object. Only permitted if the column definition is `document`.",
+              "type": "object"
+            },
+            {
+              "description": "An embedded json array. Only permitted if the column definition is `enum-set` or `document`.",
+              "type": "array"
+            },
+            {
+              "description": "A string value. Only permitted if the column definition is NOT `enum-set`, `boolean`, `integer`, `number` or `document`.",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "customExtension": {
+      "description": "Any property starting with x- is valid.",
+      "additionalProperties": true,
+      "additionalItems": true
+    }
+  }
+}
