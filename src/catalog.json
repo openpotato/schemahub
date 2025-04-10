@@ -19,9 +19,9 @@
       ]
     },
     {
-      "name": "OpenT8 Schema v-0.3",
+      "name": "OpenT8 Schema v-0.4",
       "description": "JSON schema for OpenT8 Format (version 0.4)",
-      "targetFolder": "opent8/v0.3",
+      "targetFolder": "opent8/v0.4",
       "urls": [
         "https://raw.githubusercontent.com/openpotato/opent8/main/schemas/v0.4/schema.json"
       ]
