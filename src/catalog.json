@@ -1,6 +1,5 @@
 {
   "$schema": "https://schemahub.openpotato.org/schema-catalog.json",
-  "version": 1,
   "schemas": [
     {
       "name": "CSV Table Schema Specification v-0.1",
@@ -16,6 +15,14 @@
       "targetFolder": "opencodelist/v0.3",
       "urls": [
         "https://raw.githubusercontent.com/openpotato/opencodelist/main/schemas/v0.3/schema.json"
+      ]
+    },
+    {
+      "name": "OpenT8 Schema v-0.5",
+      "description": "JSON schema for OpenT8 Format (version 0.5)",
+      "targetFolder": "opent8/v0.5",
+      "urls": [
+        "https://raw.githubusercontent.com/openpotato/opent8/main/schemas/v0.5/schema.json"
       ]
     },
     {

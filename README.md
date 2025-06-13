@@ -6,6 +6,6 @@ The aim of OpenPotato SchemaHub is to provide a central repository for the vario
 
 Here is a list of the available schema files:
 
-+ [OpenCodeList Schema v-0.3](https://schemahub.openpotato.org/opencodelist/v0.3/schema.json)
-+ [OpenT8 Schema v-0.4](https://schemahub.openpotato.org/opent8/v0.4/schema.json)
 + [CSV Table Schema v-0.1](https://schemahub.openpotato.org/csv-table-schema/v0.1/schema.json)
++ [OpenCodeList Schema v-0.3](https://schemahub.openpotato.org/opencodelist/v0.3/schema.json)
++ [OpenT8 Schema v-0.5](https://schemahub.openpotato.org/opent8/v0.5/schema.json)
