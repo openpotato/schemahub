@@ -20,7 +20,7 @@
     {
       "name": "OpenT8 Schema v-0.6",
       "description": "JSON schema for OpenT8 Format (version 0.6)",
-      "targetFolder": "opent8/v0.6",6
+      "targetFolder": "opent8/v0.6",
       "urls": [
         "https://raw.githubusercontent.com/openpotato/opent8/main/schemas/v0.6/schema.json"
       ]
