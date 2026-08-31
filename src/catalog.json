@@ -10,11 +10,11 @@
       ]
     },
     {
-      "name": "OpenCodeList Schema v-0.3",
-      "description": "JSON schema for OpenCodeList Format (version 0.3)",
-      "targetFolder": "opencodelist/v0.3",
+      "name": "OpenCodeList Schema v-0.4",
+      "description": "JSON schema for OpenCodeList Format (version 0.4)",
+      "targetFolder": "opencodelist/v0.4",
       "urls": [
-        "https://raw.githubusercontent.com/openpotato/opencodelist/main/schemas/v0.3/schema.json"
+        "https://raw.githubusercontent.com/openpotato/opencodelist/main/schemas/v0.4/schema.json"
       ]
     },
     {
